@@ -1,0 +1,161 @@
+﻿services:
+  mysql:
+    image: mysql:8.4
+    container_name: reservapro-mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./crear-bases.sql:/docker-entrypoint-initdb.d/crear-bases.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  usuario:
+    build: ./usuario
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-usuario?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  reserva:
+    build: ./reserva
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-reserva?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  pago:
+    build: ./pago
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-pago?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  servicio:
+    build: ./servicio
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-servicio?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  disponibilidad:
+    build: ./disponibilidad
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-disponibilidad?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  cancelacion:
+    build: ./cancelacion
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-cancelacion?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  promocion:
+    build: ./promocion
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-promocion?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  notificacion:
+    build: ./notificacion
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-notificacion?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  opinion:
+    build: ./opinion
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-opinion?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  reporte:
+    build: ./reporte
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-reporte?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  historial:
+    build: ./historial
+    ports:
+      - "8091:8091"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ms-historial?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_JSON: >
+        {
+          "reservapro": {
+            "routes": {
+              "usuarios": "http://usuario:8081",
+              "reservas": "http://reserva:8082",
+              "pagos": "http://pago:8083",
+              "servicios": "http://servicio:8084",
+              "disponibilidades": "http://disponibilidad:8085",
+              "cancelaciones": "http://cancelacion:8086",
+              "promociones": "http://promocion:8087",
+              "notificaciones": "http://notificacion:8088",
+              "opiniones": "http://opinion:8089",
+              "reportes": "http://reporte:8090",
+              "historial-reservas": "http://historial:8091"
+            }
+          }
+        }
+    depends_on:
+      - usuario
+      - reserva
+      - pago
+      - servicio
+      - disponibilidad
+      - cancelacion
+      - promocion
+      - notificacion
+      - opinion
+      - reporte
+      - historial
