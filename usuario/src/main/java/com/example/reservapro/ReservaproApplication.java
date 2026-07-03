@@ -3,6 +3,7 @@ package com.example.reservapro;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@EnableEureka
 @SpringBootApplication
 public class ReservaproApplication {
 
