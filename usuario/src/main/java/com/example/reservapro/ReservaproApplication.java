@@ -2,9 +2,12 @@ package com.example.reservapro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@EnableEureka
+@EnableDiscoveryClient
 @SpringBootApplication
+@EnableFeignClients
 public class ReservaproApplication {
 
 	public static void main(String[] args) {
