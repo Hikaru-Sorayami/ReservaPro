@@ -76,4 +76,9 @@ public class ReservaController {
         reservaService.eliminar(id);
         return ResponseEntity.ok("Reserva eliminada");
     }
+
+    @PutMapping("/{id}/confirmar-pago")
+    public Reserva confirmarPago(@PathVariable Long id) {
+        return reservaService.confirmarPago(id);
+    }
 }

@@ -3,6 +3,8 @@ package com.example.reservapro.service;
 import com.example.reservapro.Model.EstadoPago;
 import com.example.reservapro.Model.EstadoReserva;
 import com.example.reservapro.Model.Reserva;
+import com.example.reservapro.client.UsuarioClient;
+import com.example.reservapro.dto.UsuarioDTO;
 import com.example.reservapro.repository.ReservaRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +14,34 @@ import java.util.Optional;
 @Service
 public class ReservaService {
     private final ReservaRepository reservaRepository;
+    private final UsuarioClient UsuarioClient;
 
-    public ReservaService(ReservaRepository reservaRepository) {
+
+    public ReservaService(ReservaRepository reservaRepository,
+                          UsuarioClient usuarioClient) {
         this.reservaRepository = reservaRepository;
+        this.UsuarioClient = usuarioClient;
     }
 
     public Reserva guardar(Reserva reserva) {
         validarReserva(reserva, null);
         reserva.setEstadoReserva(EstadoReserva.PENDIENTE);
         reserva.setEstadoPago(EstadoPago.PENDIENTE);
+        UsuarioDTO usuario = UsuarioClient.obtenerUsuario(reserva.getUsuarioId());
+
+        if(usuario == null){
+            throw new RuntimeException("El usuario no existe.");
+        }
+        return reservaRepository.save(reserva);
+    }
+
+    public Reserva confirmarPago(Long id) {
+
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+
+        reserva.setEstadoPago(EstadoPago.PAGADO);
+
         return reservaRepository.save(reserva);
     }
 

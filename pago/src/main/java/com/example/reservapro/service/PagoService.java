@@ -2,6 +2,8 @@ package com.example.reservapro.service;
 
 import com.example.reservapro.Model.EstadoPago;
 import com.example.reservapro.Model.Pago;
+import com.example.reservapro.client.ReservaClient;
+import com.example.reservapro.dto.ReservaDTO;
 import com.example.reservapro.repository.PagoRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,12 @@ import java.util.UUID;
 public class PagoService {
     private final PagoRepository pagoRepository;
 
-    public PagoService(PagoRepository pagoRepository) {
+    public PagoService(PagoRepository pagoRepository,
+                       ReservaClient reservaClient) {
         this.pagoRepository = pagoRepository;
+        this.reservaClient = reservaClient;
     }
+    private final ReservaClient reservaClient;
 
     public Pago guardar(Pago pago) {
         if (pagoRepository.existsByReservaIdAndEstadoPago(pago.getReservaId(), EstadoPago.APROBADO)) {
@@ -25,6 +30,16 @@ public class PagoService {
 
         if (pago.getNumBoleta() < 1){
             throw new IllegalArgumentException("El numero de boleta no puede ser menor que 1");
+        }
+
+        ReservaDTO reserva = reservaClient.obtenerReserva(pago.getReservaId());
+
+        if(reserva == null){
+            throw new RuntimeException("La reserva no existe.");
+        }
+
+        if(!reserva.getEstadoPago().equals("PENDIENTE")){
+            throw new RuntimeException("La reserva ya fue pagada o no está pendiente.");
         }
 
         pago.setEstadoPago(EstadoPago.PENDIENTE);
