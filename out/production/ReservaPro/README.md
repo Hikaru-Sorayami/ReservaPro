@@ -1,3 +1,15 @@
+OBSERVACIONES:
+
+1. Implementar Eureka (guía esta en AVA)
+2. Implementar OpenFeign (comunicación entre microservicios)
+3. Abordar 3 microservicios primero (usuarios, reserva, pago)
+4. Corregir docker-compose con solamente esos 3 microservicios.
+5. Usar Swagger
+
+
+
+
+
 # ReservaPro
 
 Proyecto de arquitectura de microservicios para el caso ReservaPro.
