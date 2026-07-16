@@ -11,7 +11,7 @@
         <module name="eureka-server" />
         <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for pago" enabled="true">
+      <profile name="Annotation profile for usuario" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -22,22 +22,13 @@
         <module name="disponibilidad" />
         <module name="servicio" />
         <module name="historial" />
+        <module name="usuario" />
         <module name="cancelacion" />
+        <module name="reserva" />
         <module name="pago" />
         <module name="notificacion" />
         <module name="reporte" />
         <module name="opinion" />
-      </profile>
-      <profile name="Annotation profile for usuario" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
-        </processorPath>
-        <module name="reserva" />
-        <module name="usuario" />
       </profile>
     </annotationProcessing>
   </component>
